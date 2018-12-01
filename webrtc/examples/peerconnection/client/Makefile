@@ -13,33 +13,27 @@ ifeq ($(OS),Windows_NT)
 	LIBS += -lws2_32 -lpsapi -lsecur32 -lwinmm -lgdi32
 endif
 ################################################################
+# set output binary file name
 
-PROGRAM = relayserver
+PROGRAM = client
 
-OBJS = main.o \
-	conductor.o \
-	defaults.o \
-	main_wnd.o \
-	peer_connection_client.o 
+# set output object file name
 
-################################################################
-# The directories in which source files reside.
-# At least one path should be specified.  
-
-SRCDIRS   := .        # current directory  
+OBJS = #main.o \
 
 ################################################################
 # search all subdirs
 
-DIRDEPTH := 
-DIRPATH := ../../rtc_base ../../p2p ../../system_wrappers
-ifeq ($(DIRDEPTH),)
+DIRPATH := ../../../rtc_base ../../../media ../../../api #../../../modules
+ifneq ($(DIRPATH),)
 	SRCDIRS := $(shell find $(DIRPATH) -type d)
-else ifeq ($(DIRDEPTH),)
-	SRCDIRS := $(shell find $(DIRPATH) -type d)
-else
-	SRCDIRS := $(shell find $(DIRPATH) -maxdepth $(DIRDEPTH) -type d)
 endif
+################################################################
+# The directories in which source files reside.
+# At least one path should be specified.  
+# add specific directory
+
+SRCDIRS += .        
 
 ################################################################
 # The source file types (headers excluded).  
@@ -75,6 +69,12 @@ OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*gcd,$(SRCEXTS
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*quic*,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/logcat_trace_context,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*darwin*,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/sctp*,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/fake*,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*opus*,$(SRCEXTS))))
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/video_frame_buffer,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/i420_buffer,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/simulcast_encoder_adapter,$(SRCEXTS))))  
 #OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*opensslstreamadapter,$(SRCEXTS))))  
 #OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*openssl*,$(SRCEXTS))))  
 
