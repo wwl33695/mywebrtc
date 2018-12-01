@@ -24,7 +24,7 @@ OBJS = #main.o \
 ################################################################
 # search all subdirs
 
-DIRPATH := ../../../rtc_base ../../../media ../../../api #../../../modules
+DIRPATH := ../../../rtc_base ../../../media ../../../api ../../../modules
 ifneq ($(DIRPATH),)
 	SRCDIRS := $(shell find $(DIRPATH) -type d)
 endif
