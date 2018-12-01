@@ -14,9 +14,9 @@ ifeq ($(OS),Windows_NT)
 endif
 ################################################################
 
-PROGRAM = relayserver
+PROGRAM = server
 
-OBJS = #main.o \
+OBJS = ../../../rtc_tools/simple_command_line_parser.o #main.o \
 
 ################################################################
 # The directories in which source files reside.
@@ -28,7 +28,7 @@ SRCDIRS   := .        # current directory
 # search all subdirs
 
 DIRDEPTH := 
-DIRPATH := . ../../rtc_base ../../p2p ../../system_wrappers
+DIRPATH := . ../../../rtc_base 
 ifeq ($(DIRDEPTH),)
 	SRCDIRS := $(shell find $(DIRPATH) -type d)
 else ifeq ($(DIRDEPTH),)
