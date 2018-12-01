@@ -438,8 +438,8 @@ int OpenSSLAdapter::BeginSSL() {
   }
 
   // Set a couple common TLS extensions; even though we don't use them yet.
-  SSL_enable_ocsp_stapling(ssl_);
-  SSL_enable_signed_cert_timestamps(ssl_);
+//  SSL_enable_ocsp_stapling(ssl_);
+//  SSL_enable_signed_cert_timestamps(ssl_);
 
   if (!alpn_protocols_.empty()) {
     std::string tls_alpn_string = TransformAlpnProtocols(alpn_protocols_);

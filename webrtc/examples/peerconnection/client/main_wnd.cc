@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-#include "libyuv/convert_argb.h"
+//#include "libyuv/convert_argb.h"
 #include "webrtc/api/video/i420_buffer.h"
 #include "webrtc/examples/peerconnection/client/defaults.h"
 #include "webrtc/rtc_base/arraysize.h"
@@ -20,7 +20,7 @@
 #include "webrtc/rtc_base/logging.h"
 
 ATOM MainWnd::wnd_class_ = 0;
-const wchar_t MainWnd::kClassName[] = L"WebRTC_MainWnd";
+const TCHAR MainWnd::kClassName[] = "WebRTC_MainWnd";
 
 using rtc::sprintfn;
 
@@ -30,7 +30,7 @@ const char kConnecting[] = "Connecting... ";
 const char kNoVideoStreams[] = "(no video streams either way)";
 const char kNoIncomingStream[] = "(no incoming video)";
 
-void CalculateWindowSizeForText(HWND wnd, const wchar_t* text,
+void CalculateWindowSizeForText(HWND wnd, const TCHAR* text,
                                 size_t* width, size_t* height) {
   HDC dc = ::GetDC(wnd);
   RECT text_rc = {0};
@@ -88,7 +88,7 @@ bool MainWnd::Create() {
     return false;
 
   ui_thread_id_ = ::GetCurrentThreadId();
-  wnd_ = ::CreateWindowExW(WS_EX_OVERLAPPEDWINDOW, kClassName, L"WebRTC",
+  wnd_ = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, kClassName, "WebRTC",
       WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN,
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
       NULL, NULL, GetModuleHandle(NULL), this);
@@ -337,7 +337,7 @@ void MainWnd::OnDefaultAction() {
       }
     }
   } else {
-    MessageBoxA(wnd_, "OK!", "Yeah", MB_OK);
+    ::MessageBoxA(wnd_, "OK!", "Yeah", MB_OK);
   }
 }
 
@@ -445,14 +445,14 @@ bool MainWnd::RegisterWindowClass() {
 }
 
 void MainWnd::CreateChildWindow(HWND* wnd, MainWnd::ChildWindowID id,
-                                const wchar_t* class_name, DWORD control_style,
+                                const TCHAR* class_name, DWORD control_style,
                                 DWORD ex_style) {
   if (::IsWindow(*wnd))
     return;
 
   // Child windows are invisible at first, and shown after being resized.
   DWORD style = WS_CHILD | control_style;
-  *wnd = ::CreateWindowEx(ex_style, class_name, L"", style,
+  *wnd = ::CreateWindowEx(ex_style, class_name, "", style,
                           100, 100, 100, 100, wnd_,
                           reinterpret_cast<HMENU>(id),
                           GetModuleHandle(NULL), NULL);
@@ -463,15 +463,15 @@ void MainWnd::CreateChildWindow(HWND* wnd, MainWnd::ChildWindowID id,
 
 void MainWnd::CreateChildWindows() {
   // Create the child windows in tab order.
-  CreateChildWindow(&label1_, LABEL1_ID, L"Static", ES_CENTER | ES_READONLY, 0);
-  CreateChildWindow(&edit1_, EDIT_ID, L"Edit",
+  CreateChildWindow(&label1_, LABEL1_ID, "Static", ES_CENTER | ES_READONLY, 0);
+  CreateChildWindow(&edit1_, EDIT_ID, "Edit",
                     ES_LEFT | ES_NOHIDESEL | WS_TABSTOP, WS_EX_CLIENTEDGE);
-  CreateChildWindow(&label2_, LABEL2_ID, L"Static", ES_CENTER | ES_READONLY, 0);
-  CreateChildWindow(&edit2_, EDIT_ID, L"Edit",
+  CreateChildWindow(&label2_, LABEL2_ID, "Static", ES_CENTER | ES_READONLY, 0);
+  CreateChildWindow(&edit2_, EDIT_ID, "Edit",
                     ES_LEFT | ES_NOHIDESEL | WS_TABSTOP, WS_EX_CLIENTEDGE);
-  CreateChildWindow(&button_, BUTTON_ID, L"Button", BS_CENTER | WS_TABSTOP, 0);
+  CreateChildWindow(&button_, BUTTON_ID, "Button", BS_CENTER | WS_TABSTOP, 0);
 
-  CreateChildWindow(&listbox_, LISTBOX_ID, L"ListBox",
+  CreateChildWindow(&listbox_, LISTBOX_ID, "ListBox",
                     LBS_HASSTRINGS | LBS_NOTIFY, WS_EX_CLIENTEDGE);
 
   ::SetWindowTextA(edit1_, server_.c_str());
@@ -481,15 +481,15 @@ void MainWnd::CreateChildWindows() {
 void MainWnd::LayoutConnectUI(bool show) {
   struct Windows {
     HWND wnd;
-    const wchar_t* text;
+    const TCHAR* text;
     size_t width;
     size_t height;
   } windows[] = {
-    { label1_, L"Server" },
-    { edit1_, L"XXXyyyYYYgggXXXyyyYYYggg" },
-    { label2_, L":" },
-    { edit2_, L"XyXyX" },
-    { button_, L"Connect" },
+    { label1_, "Server" },
+    { edit1_, "XXXyyyYYYgggXXXyyyYYYggg" },
+    { label2_, ":" },
+    { edit2_, "XyXyX" },
+    { button_, "Connect" },
   };
 
   if (show) {
@@ -615,6 +615,7 @@ void MainWnd::VideoRenderer::OnFrame(
     SetSize(buffer->width(), buffer->height());
 
     RTC_DCHECK(image_.get() != NULL);
+/*
     libyuv::I420ToARGB(buffer->DataY(), buffer->StrideY(),
                        buffer->DataU(), buffer->StrideU(),
                        buffer->DataV(), buffer->StrideV(),
@@ -622,6 +623,7 @@ void MainWnd::VideoRenderer::OnFrame(
                        bmi_.bmiHeader.biWidth *
                            bmi_.bmiHeader.biBitCount / 8,
                        buffer->width(), buffer->height());
+*/
   }
   InvalidateRect(wnd_, NULL, TRUE);
 }

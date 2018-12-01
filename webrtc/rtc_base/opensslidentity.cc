@@ -206,7 +206,8 @@ void OpenSSLKeyPair::AddReference() {
 #if defined(OPENSSL_IS_BORINGSSL)
   EVP_PKEY_up_ref(pkey_);
 #else
-  CRYPTO_add(&pkey_->references, 1, CRYPTO_LOCK_EVP_PKEY);
+  EVP_PKEY_up_ref(pkey_);
+//  CRYPTO_add(&pkey_->references, 1, CRYPTO_LOCK_EVP_PKEY);
 #endif
 }
 
@@ -445,7 +446,8 @@ void OpenSSLCertificate::AddReference() const {
 #if defined(OPENSSL_IS_BORINGSSL)
   X509_up_ref(x509_);
 #else
-  CRYPTO_add(&x509_->references, 1, CRYPTO_LOCK_X509);
+  X509_up_ref(x509_);
+//  CRYPTO_add(&x509_->references, 1, CRYPTO_LOCK_X509);
 #endif
 }
 

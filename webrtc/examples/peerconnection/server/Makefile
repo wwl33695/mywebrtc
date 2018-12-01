@@ -4,7 +4,7 @@ CPP = g++
 ################################################################
 INCDIR = -I./include
 CFLAGS = -fPIC -lpthread
-CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../.. -DWEBRTC_WIN -D__native_client__ #-DOPENSSL_NO_SSL_INTERN 
+CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -DWEBRTC_WIN -D__native_client__ #-DOPENSSL_NO_SSL_INTERN 
 
 LIBDIR = -L./lib
 LINK_FLAGS = -w -g -D__STDC_CONSTANT_MACROS

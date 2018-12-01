@@ -9,13 +9,16 @@
  */
 
 #include "webrtc/rtc_base/opensslstreamadapter.h"
+#include "openssl.h"
+
+#include <openssl/ossl_typ.h>
 
 #include <openssl/bio.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/tls1.h>
-#include <openssl/x509v3.h>
+//#include <openssl/x509v3.h>
 #ifndef OPENSSL_IS_BORINGSSL
 #include <openssl/dtls1.h>
 #include <openssl/ssl.h>

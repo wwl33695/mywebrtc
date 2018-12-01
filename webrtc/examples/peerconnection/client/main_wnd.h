@@ -70,7 +70,7 @@ class MainWindow {
 
 class MainWnd : public MainWindow {
  public:
-  static const wchar_t kClassName[];
+  static const TCHAR kClassName[];
 
   enum WindowMessages {
     UI_THREAD_CALLBACK = WM_APP + 1,
@@ -166,7 +166,7 @@ class MainWnd : public MainWindow {
   static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
   static bool RegisterWindowClass();
 
-  void CreateChildWindow(HWND* wnd, ChildWindowID id, const wchar_t* class_name,
+  void CreateChildWindow(HWND* wnd, ChildWindowID id, const TCHAR* class_name,
                          DWORD control_style, DWORD ex_style);
   void CreateChildWindows();
 

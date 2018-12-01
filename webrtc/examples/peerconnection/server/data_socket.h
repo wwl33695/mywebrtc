@@ -11,7 +11,7 @@
 #ifndef WEBRTC_EXAMPLES_PEERCONNECTION_SERVER_DATA_SOCKET_H_
 #define WEBRTC_EXAMPLES_PEERCONNECTION_SERVER_DATA_SOCKET_H_
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 typedef int socklen_t;
 typedef SOCKET NativeSocket;

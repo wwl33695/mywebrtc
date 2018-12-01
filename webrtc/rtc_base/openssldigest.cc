@@ -16,6 +16,7 @@
 namespace rtc {
 
 OpenSSLDigest::OpenSSLDigest(const std::string& algorithm) {
+//  EVP_MD_CTX_reset(&ctx_);
   EVP_MD_CTX_init(&ctx_);
   if (GetDigestEVP(algorithm, &md_)) {
     EVP_DigestInit_ex(&ctx_, md_, nullptr);
@@ -25,7 +26,8 @@ OpenSSLDigest::OpenSSLDigest(const std::string& algorithm) {
 }
 
 OpenSSLDigest::~OpenSSLDigest() {
-  EVP_MD_CTX_cleanup(&ctx_);
+  EVP_MD_CTX_destroy(&ctx_);
+//  EVP_MD_CTX_cleanup(&ctx_);
 }
 
 size_t OpenSSLDigest::Size() const {

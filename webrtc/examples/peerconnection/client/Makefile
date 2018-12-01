@@ -4,19 +4,23 @@ CPP = g++
 ################################################################
 INCDIR = -I./include
 CFLAGS = -fPIC -lpthread
-CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../.. -DWEBRTC_WIN -D__native_client__ #-DOPENSSL_NO_SSL_INTERN 
+CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -DWEBRTC_WIN -D__native_client__ #-DOPENSSL_NO_SSL_INTERN 
 
 LIBDIR = -L./lib
 LINK_FLAGS = -w -g -D__STDC_CONSTANT_MACROS
 LIBS =  -lstdc++ -ljsoncpp -lcrypto -lssl 
 ifeq ($(OS),Windows_NT)
-	LIBS += -lws2_32 -lpsapi -lsecur32 -lwinmm
+	LIBS += -lws2_32 -lpsapi -lsecur32 -lwinmm -lgdi32
 endif
 ################################################################
 
 PROGRAM = relayserver
 
-OBJS = #main.o \
+OBJS = main.o \
+	conductor.o \
+	defaults.o \
+	main_wnd.o \
+	peer_connection_client.o 
 
 ################################################################
 # The directories in which source files reside.
@@ -28,7 +32,7 @@ SRCDIRS   := .        # current directory
 # search all subdirs
 
 DIRDEPTH := 
-DIRPATH := . ../../rtc_base ../../p2p ../../system_wrappers
+DIRPATH := ../../rtc_base ../../p2p ../../system_wrappers
 ifeq ($(DIRDEPTH),)
 	SRCDIRS := $(shell find $(DIRPATH) -type d)
 else ifeq ($(DIRDEPTH),)
