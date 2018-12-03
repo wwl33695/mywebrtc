@@ -4,8 +4,9 @@ CPP = g++
 ################################################################
 INCDIR = -I./include
 CFLAGS = -fPIC -lpthread
-CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -DWEBRTC_WIN -D__native_client__ \
-			-DWEBRTC_APM_DEBUG_DUMP -DWEBRTC_INTELLIGIBILITY_ENHANCER
+CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -I../../../../third_party/libsrtp/crypto/include \
+			-I../../../../third_party/libsrtp/include \
+			-DWEBRTC_WIN -D__native_client__ -DWEBRTC_APM_DEBUG_DUMP -DWEBRTC_INTELLIGIBILITY_ENHANCER
 
 LIBDIR = -L./lib
 LINK_FLAGS = -w -g -D__STDC_CONSTANT_MACROS
@@ -20,12 +21,14 @@ PROGRAM = client
 
 # set output object file name
 
-OBJS = #main.o \
+OBJS = ../../../common_types.o \
 
 ################################################################
 # search all subdirs
 
-DIRPATH := ../../../rtc_base ../../../media ../../../api ../../../modules
+DIRPATH := ../../../rtc_base ../../../p2p ../../../media ../../../api ../../../call ../../../system_wrappers \
+			../../../video ../../../audio ../../../pc ../../../modules/rtp_rtcp
+
 ifneq ($(DIRPATH),)
 	SRCDIRS := $(shell find $(DIRPATH) -type d)
 endif
@@ -76,8 +79,15 @@ OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*quic*,$(SRCEX
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/logcat_trace_context,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*darwin*,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/sctp*,$(SRCEXTS))))  
-OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/fake*,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*opus*,$(SRCEXTS))))
+
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/fakertp,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/fakewebrtccall,$(SRCEXTS))))  
+
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*loopback,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/replay,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/srtpsession,$(SRCEXTS))))  
+
 
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/video_frame_buffer,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/i420_buffer,$(SRCEXTS))))  
