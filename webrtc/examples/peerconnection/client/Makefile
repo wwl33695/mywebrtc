@@ -4,7 +4,8 @@ CPP = g++
 ################################################################
 INCDIR = -I./include
 CFLAGS = -fPIC -lpthread
-CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -DWEBRTC_WIN -D__native_client__ #-DOPENSSL_NO_SSL_INTERN 
+CPPFLAGS = -fPIC -g -W -Wall -std=c++11 -w -I. -I../.. -I../../../.. -DWEBRTC_WIN -D__native_client__ \
+			-DWEBRTC_APM_DEBUG_DUMP -DWEBRTC_INTELLIGIBILITY_ENHANCER
 
 LIBDIR = -L./lib
 LINK_FLAGS = -w -g -D__STDC_CONSTANT_MACROS
@@ -55,6 +56,11 @@ endif
 # FILTER_IN   := %.c %.s      # included
 # FILTER_OUT   := %.o %.cc   # excluded
 
+# my filter function
+# $(1): objects
+# $(2): filter string
+my_string_filter_out = $(filter-out $(foreach v,$(1),$(if $(findstring $(2),$(v)),$(v),)), $1)
+
 FILTER_IN := 
 FILTER_OUT := 
 
@@ -72,21 +78,64 @@ OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*darwin*,$(SRC
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/sctp*,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/fake*,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*opus*,$(SRCEXTS))))
+
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/video_frame_buffer,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/i420_buffer,$(SRCEXTS))))  
 OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/simulcast_encoder_adapter,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/rent_a_codec,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/audio_device_impl,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/noise_suppression_impl,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/aec_core_mips,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/aec_core_neon,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/aecm_core_mips,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/aecm_core_neon,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/covariance_matrix_generator,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/ooura_fft_neon,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/window_capturer_win,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/mock_desktop_capturer_callback,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/desktop_frame_rotation,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/mouse_cursor_monitor_win,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/cropping_window_capturer_win,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/bwe_simulations,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/sink_filter_ds,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/video_capture_ds,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/video_capture_factory_windows,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/h264_encoder_impl,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/h264_decoder_impl,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/vp8_impl,$(SRCEXTS))))  
+OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/vp9_noop,$(SRCEXTS))))  
+
+
 #OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*opensslstreamadapter,$(SRCEXTS))))  
 #OUT_SOURCES += $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*openssl*,$(SRCEXTS))))  
 
 FILTER_OUT := $(foreach x,$(SRCEXTS), $(patsubst %$(x),%.o,$(filter %$(x),$(OUT_SOURCES))))  
-
-ifneq ($(FILTER_IN),)
-	OBJS := $(filter $(FILTER_IN), $(OBJS))
-endif
-
 ifneq ($(FILTER_OUT),)
 	OBJS := $(filter-out $(FILTER_OUT), $(OBJS))
 endif
+
+OBJS := $(call my_string_filter_out,$(OBJS),test)
+OBJS := $(call my_string_filter_out,$(OBJS),tools/)
+OBJS := $(call my_string_filter_out,$(OBJS),android)
+OBJS := $(call my_string_filter_out,$(OBJS),linux)
+OBJS := $(call my_string_filter_out,$(OBJS),mac)
+OBJS := $(call my_string_filter_out,$(OBJS),x11)
+OBJS := $(call my_string_filter_out,$(OBJS),aec_dump)
+OBJS := $(call my_string_filter_out,$(OBJS),audio_coding)
+OBJS := $(call my_string_filter_out,$(OBJS),audio_processing)
+
+OBJS := $(call my_string_filter_out,$(OBJS),desktop_capture)
+OBJS := $(call my_string_filter_out,$(OBJS),video_coding)
+OBJS := $(call my_string_filter_out,$(OBJS),video_capture)
+OBJS := $(call my_string_filter_out,$(OBJS),video_processing)
+
+
+FILTER_IN_STRING := 
+FILTER_IN := $(foreach v,$(OBJS),$(if $(findstring $(FILTER_IN_STRING),$(v)),$(v),))
+ifneq ($(FILTER_IN_STRING),)
+	OBJS := $(filter $(FILTER_IN), $(OBJS))
+endif
+
 ################################################################
 
 DEBUGOBJS = $(patsubst %.o,%.d,$(OBJS))  
